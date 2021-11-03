@@ -1,6 +1,11 @@
 from django.shortcuts import render
 import os
 import time
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+
 from .LIWCAnalysis import getExcel, getTweets, tokenize,\
                           dic_to_dict, match_regex_to_text, \
                           bestMatch, getScore
@@ -71,9 +76,9 @@ def analysis(request):
         'fiveFactors': fiveFactors,
         'scores': scoresVar,
         'cats': catVar,
-        'founderName':userName
+        'userName':userName
     }
-
+    request.session['5Factor'] = fiveFactorData
     #jsonData = dumps(fiveFactorData)
 
     context = {
@@ -94,3 +99,10 @@ def analysis(request):
     }
 
     return render(request, 'LIWC/analysis.html', context)
+
+class ChartData(APIView):
+
+    def get(self, request, format = None):
+        data = request.session['5Factor']
+
+        return Response(data)

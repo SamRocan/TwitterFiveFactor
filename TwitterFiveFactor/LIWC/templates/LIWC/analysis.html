@@ -1,16 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>Analysis</h1>
+{% extends 'Main/base.html' %}
+{% load static %}
+
+{% block content %}
+<h1 style="text-align: center">Analysis</h1>
+<div class="col-md-6">
+    <canvas id="myChartBar"></canvas>
+</div>
+<div style="text-align: center">
 <p>{{ext}}: {{extScore}}</p>
 <p>{{neu}}: {{neuScore}}</p>
 <p>{{agr}}: {{agrScore}}</p>
 <p>{{con}}: {{conScore}}</p>
 <p>{{opn}}: {{opnScore}}</p>
 <a href="{% url 'index' %}">Home</a>
-</body>
+</div>
+{% endblock %}
+{% block extraJS %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+<script>
+    var endpoint = '/fivefactor/graph/'
+    $.ajax({
+        method: "GET",
+        url: endpoint,
+        success: function(data) {
+            drawBarGraph(data, 'myChartBar');
+            console.log(data.scores)
+            console.log(data.cats)
+        },
+        error: function(error_data) {
+
+            console.log(error_data);
+        }
+    })
+    function drawBarGraph(data, id) {
+        var labels = data.fiveFactors;
+        var chartLabel = data.userName;
+        var chartData = data.scores;
+        var ctx = document.getElementById(id).getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: chartLabel,
+                    data: chartData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}
 </html>

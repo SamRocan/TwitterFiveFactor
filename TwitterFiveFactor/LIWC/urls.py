@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.urls import path
 from . import views
+from .views import ChartData
 
 urlpatterns = [
-    path('', views.analysis, name='analysis')
+    path('', views.analysis, name='analysis'),
+    path('graph/', ChartData.as_view(), name='graph')
 ]
