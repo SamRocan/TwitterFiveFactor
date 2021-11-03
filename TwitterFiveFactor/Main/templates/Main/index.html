@@ -2,5 +2,17 @@
 {% load static %}
 
 {% block content %}
-<a href="{% url 'analysis' %}" class="btn btn-primary">Go</a>
+<div class="container-fluid">
+
+    <form class="form-floating" method="get" action="{% url 'analysis' %}">
+        {% csrf_token %}
+        <div>
+            <div class="form-floating mb-3">
+                <input type="search" class="form-control" id="floatingInput" name="analysisSearch" placeholder="@TwitterUser">
+                <label for="floatingInput">Enter Twitter Handle</label>
+            </div>
+            <button class="btn btn-primary" type="submit" style="border: none;">GO<i class="fa fa-search"></i></button>
+        </div>
+    </form>
+</div>
 {% endblock %}
