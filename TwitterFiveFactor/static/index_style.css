@@ -1,0 +1,22 @@
+form .button{
+    color: black;
+}
+form {
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    margin: 75px auto;
+    background:#fafafa;
+    -webkit-box-shadow: 0px 0px 96px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 96px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 96px 0px rgba(0,0,0,0.75);
+    min-height: 250px;
+    padding: 40px;
+}
+
+form input {
+    width: 100%;
+    height: 28px;
+    margin-bottom: 15px;
+    padding: 5px;
+}

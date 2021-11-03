@@ -13,11 +13,12 @@ from .LIWCAnalysis import getExcel, getTweets, tokenize,\
 def analysis(request):
     if(request.method == 'GET'):
         prodQuery = request.GET['analysisSearch']
-        print(prodQuery)
 
     userName = prodQuery
     if(userName == "None"):
         return render(request, 'productParser/noTwitter.html')
+    if(userName[0]=='@'):
+        userName = userName[1:]
     module_dir = os.path.dirname('media/')
     all_users = os.path.join(module_dir, 'combined_users.xlsx')
     user_scores = os.path.join(module_dir, 'user_scores.xlsx')
