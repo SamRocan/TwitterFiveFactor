@@ -1,7 +1,12 @@
 {% extends 'Main/base.html' %}
 {% load static %}
-
+{% block extraCSS %}
+<link rel="stylesheet" href="{% static 'analysis_style.css' %}">
+{% endblock %}
 {% block content %}
+<div id="image-container">
+    <img src="{{userImage}}" alt="no picture" width="120px" height="120px" id="profilepic">
+</div>
 <h1 style="text-align: center">@{{founderName}}</h1>
 <canvas id="myChartBar"></canvas>
 <div style="text-align: center; margin-bottom: 30px">

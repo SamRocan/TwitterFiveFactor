@@ -1,10 +1,12 @@
 from django.shortcuts import render
 import os
 import time
+import tweepy as tw
+import pandas as pd
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from django.conf import settings
 
 from .LIWCAnalysis import getExcel, getTweets, tokenize,\
                           dic_to_dict, match_regex_to_text, \
@@ -71,13 +73,22 @@ def analysis(request):
     con = "Concientiousness (" + str(catVar[3]) + ")"
     opn = "Openness (" + str(catVar[4]) + ")"
 
+    #Get Twitter Image
+    auth = tw.OAuthHandler(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
+    auth.set_access_token(settings.ACCESS_TOKEN, settings.ACCESS_TOKEN_SECRET)
+    api = tw.API(auth, wait_on_rate_limit=True)
+
+    user = api.get_user(screen_name=userName)
+    url = str(user.profile_image_url)
+    userImage = url.replace("_normal", "")
+    print(userImage)
     print("My program took ", time.time() - start_time, " to run")
 
     fiveFactorData = {
         'fiveFactors': fiveFactors,
         'scores': scoresVar,
         'cats': catVar,
-        'userName':userName
+        'userName':userName,
     }
     request.session['5Factor'] = fiveFactorData
     #jsonData = dumps(fiveFactorData)
@@ -96,7 +107,8 @@ def analysis(request):
         'agr':agr,
         'con':con,
         'opn':opn,
-        'founderName':userName
+        'founderName':userName,
+        'userImage':userImage
     }
 
     return render(request, 'LIWC/analysis.html', context)
