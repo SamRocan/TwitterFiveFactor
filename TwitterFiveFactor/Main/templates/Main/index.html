@@ -5,18 +5,45 @@
 <link rel="stylesheet" href="{% static 'index_style.css' %}">
 {% endblock %}
 {% block content %}
+<!--Extra styling -->
+<style>
+
+    .loader {
+        border: 4px solid white; /* Light grey */
+        border-top: 4px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
 <div class="container-fluid">
 
     <form class="form-floating" method="get" action="{% url 'analysis' %}">
         <div>
             <h2 style="text-align: center">Enter Twitter Handle</h2>
             <div class="form-floating mb-3">
-                <input type="search" class="form-control" id="floatingInput" name="analysisSearch" placeholder="@TwitterUser">
-                <label for="floatingInput">Enter Twitter Handle (Ex. @Jack)</label>
-                <button class="btn btn-primary" type="submit" style="margin:0 auto; display:block;">Get 5 Factor Score</button>
-
+                <input type="search" class="form-control" id="floatingInput" name="analysisSearch">
+                <label for="floatingInput">@TwitterUser</label>
+                <button class="btn btn-primary" type="submit" style="margin:0 auto; display:block;" onclick="showDiv()">Get 5 Factor Score</button>
+            </div>
+            <div id="info" style="display: none">
+                <p style="text-align: center; font-size: smaller;">Account being analyzed.<br>This can take up to 30 seconds.</p>
+                <div style="margin-left: auto; margin-right: auto"class="loader"></div>
             </div>
         </div>
     </form>
 </div>
+{% endblock %}
+{% block extraJS %}
+<script>
+    function showDiv() {
+        document.getElementById('info').style.display = "block";
+    }
+</script>
 {% endblock %}
