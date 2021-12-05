@@ -7,3 +7,7 @@
     margin-right: auto;
     border-radius: 50%;
 }
+#chartContainer{
+    height: 40vh;
+    width: 100%;
+}
