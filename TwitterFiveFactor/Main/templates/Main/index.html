@@ -26,15 +26,45 @@
 
     <form class="form-floating" method="get" action="{% url 'analysis' %}">
         <div>
-            <h2 style="text-align: center">Enter Twitter Handle</h2>
+            <h2>Enter Twitter Handle</h2>
             <div class="form-floating mb-3">
                 <input type="search" class="form-control" id="floatingInput" name="analysisSearch">
                 <label for="floatingInput">@TwitterUser</label>
                 <button class="btn btn-primary" type="submit" style="margin:0 auto; display:block;" onclick="showDiv()">Get 5 Factor Score</button>
             </div>
+            <div id="how-it-works-link">
+                <a type="submit" style="margin:0 auto; display:block; text-align: center; color: #3498db" onclick="showInfo()">How Does it Work?</a>
+            </div>
             <div id="info" style="display: none">
                 <p style="text-align: center; font-size: smaller;">Account being analyzed.<br>This can take up to 30 seconds.</p>
                 <div style="margin-left: auto; margin-right: auto"class="loader"></div>
+            </div>
+            <div id="how-it-works" style="display: none">
+                <hr>
+                <h2>How are the scores calculated</h2>
+                <p>The software uses the following software and resources in conjunction to determine the personality scores of Twitter users.</p>
+                <h4><a href="http://liwc.wpengine.com/how-it-works/">LIWC</a></h4>
+                <p>The way that the Linguistic Inquiry and Word Count (LIWC) program works is fairly simple. Basically, it reads a given text and counts the percentage of words that reflect different emotions, thinking styles, social concerns, and even parts of speech. Because LIWC was developed by researchers with interests in social, clinical, health, and cognitive psychology, the language categories were created to capture people’s social and psychological states.</p>
+                <h4><a href="https://www.psychometrics.cam.ac.uk/productsservices/mypersonality">myPersonality Database</a></h4>
+                <p>myPersonality was a popular Facebook application created by David Stillwell in 2007 that allowed users to take real psychometric tests and obtain their results instantly. As well as the data from the tests, around 40% of the respondents also opted in to share data from their Facebook profile, resulting in one of the largest social science research databases in history.</p>
+                <h4 style="text-decoration: underline">How it works</h4>
+                <p>The software works as follows:
+                    <br>
+                    <br>
+                    1) Run each individuals texts from the MyPersonality database through the LIWC dictionary, getting their results for each LIWC category
+                    <br>
+                    <br>
+                    2) Download a Twitter users tweets
+                    <br>
+                    <br>
+                    3) Run the founders tweets through the LIWC dictionary, getting their results for each LIWC category
+                    <br>
+                    <br>
+                    4) For each LIWC category, rank from first to last the difference (modulus) between each MyPersonality individual's score for a LIWC category and the founders for a  LIWC category. The closest individual will be awarded a value of 1, the furthest away will be awarded a value of 238 (maximum value). The value for each user is appended with its respective  score for each category
+                    <br>
+                    <br>
+                    5) Get the total score for each MyPersonality individual the individual with the lowest score allocates their personality traits to the founder, as they have been deemed the ‘closest match’
+                </p>
             </div>
         </div>
     </form>
@@ -44,6 +74,10 @@
 <script>
     function showDiv() {
         document.getElementById('info').style.display = "block";
+    }
+    function showInfo(){
+        document.getElementById('how-it-works').style.display = "block";
+        document.getElementById('how-it-works-link').style.display = "none";
     }
 </script>
 {% endblock %}
