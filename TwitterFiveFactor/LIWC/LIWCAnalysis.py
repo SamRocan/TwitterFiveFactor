@@ -1,4 +1,4 @@
-import snscrape.modules.twitter as sntwitter
+import tweepy
 import pandas as pd
 import re
 
@@ -173,15 +173,14 @@ def removeSpecialCharacters(str):
 #Uses SNSScrape to get a users recent tweets depending on their twitter username
 def getTweets(username):
     tweets_list = []
-    twitterContent = ""
-    #Puts tweets into list
-    for i,tweet in enumerate(sntwitter.TwitterSearchScraper('from:'+username).get_items()): #declare a username
-        if i>10: #number of tweets you want to scrape
-            break
-        tweets_list.append([tweet.date, tweet.id, tweet.content]) #declare the attributes to be returned
+    auth = tweepy.OAuthHandler('lrsofcOzRQWTgfAUSA3nkWBzS', 'vgJGrY2PHk0OZJ6uhMwSREC3HTFYQkeGgbzmu3NYNA8ecyOmyB')
+    auth.set_access_token('1421085002624872449-PLnNEuEtcPUHblNwELzvdtOAIHMzzl', 'ltN6gYCPx70zntHtAl4RzczBEqh8So1SaSUC0y8QjztPm')
 
-    for i in tweets_list:
-        twitterContent += str(i[2])
+    api = tweepy.API(auth)
+
+    twitterContent = ''
+    for tweet in tweepy.Cursor(api.user_timeline,id=username).items(10):
+        twitterContent += ' ' + tweet._json['text']
 
     return twitterContent
 
