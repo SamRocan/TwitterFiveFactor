@@ -10,7 +10,7 @@ from django.conf import settings
 
 from .LIWCAnalysis import getExcel, getTweets, tokenize,\
                           dic_to_dict, match_regex_to_text, \
-                          bestMatch, getScore
+                          bestMatch, getScore, Node, Trie, makeTrie
 # Create your views here.
 def analysis(request):
     if(request.method == 'GET'):
@@ -43,9 +43,17 @@ def analysis(request):
     print("turning to dictionary")
     dictionary = dic_to_dict(liwc_dic)
     print("Dictionary took ", time.time() - start_time, " to run")
+    trie = makeTrie(dictionary)
 
     print("Categorizing tokens")
-    values = match_regex_to_text( tokenizedTweets[0], dictionary)
+    trie = makeTrie(dictionary)
+
+    values = []
+    for i in tokenizedTweets[0]:
+        value = trie.lookup(i)
+        for i in value:
+            if(isinstance(i, int)):
+                values.append(i)
     print("Categorizing tokens took ", time.time() - start_time, " to run")
 
     print("Getting Best Match")

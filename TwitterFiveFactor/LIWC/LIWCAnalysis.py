@@ -1,7 +1,63 @@
 import tweepy
 import pandas as pd
 import re
+from django.conf import settings
 
+#Create a Trie Structure
+class Node:
+    def __init__(self):
+        self.key = None
+        self.value = None
+        self.children = {}
+
+class Trie:
+    def __init__(self):
+        self.root = Node()
+
+    def insert(self, word, value):
+        currentWord = word
+        currentNode = self.root
+        while len(currentWord) > 0:
+            if currentWord[0] in currentNode.children:
+                currentNode = currentNode.children[currentWord[0]]
+                currentWord = currentWord[1:]
+            else:
+                newNode = Node()
+                newNode.key = currentWord[0]
+                if len(currentWord) == 1:
+                    newNode.value = value
+                currentNode.children[currentWord[0]] = newNode
+                currentNode = newNode
+                currentWord = currentWord[1:]
+
+    def lookup(self, word):
+        currentWord = word
+        currentNode = self.root
+        while len(currentWord) > 0:
+            if(len(currentNode.children) == 1) and (list(currentNode.children.keys())[0] == '+'):
+                currentWord = '+'
+            if (currentWord[0] in currentNode.children):
+                currentNode = currentNode.children[currentWord[0]]
+                currentWord = currentWord[1:]
+                #print(currentWord)
+            else:
+                return "Not in trie"
+        if currentNode.value == None:
+            return "None"
+        return currentNode.value
+
+    def printAllNodes(self):
+        nodes = [self.root]
+        while len(nodes) > 0:
+            for letter in nodes[0].children:
+                nodes.append(nodes[0].children[letter])
+            print(nodes.pop(0).key)
+
+def makeTrie(words):
+    trie = Trie()
+    for word, value in words.items():
+        trie.insert(word, value)
+    return trie
 
 #reads excel data into DataFrame Object
 def getExcel(filename):
@@ -173,8 +229,8 @@ def removeSpecialCharacters(str):
 #Uses SNSScrape to get a users recent tweets depending on their twitter username
 def getTweets(username):
     tweets_list = []
-    auth = tweepy.OAuthHandler('lrsofcOzRQWTgfAUSA3nkWBzS', 'vgJGrY2PHk0OZJ6uhMwSREC3HTFYQkeGgbzmu3NYNA8ecyOmyB')
-    auth.set_access_token('1421085002624872449-PLnNEuEtcPUHblNwELzvdtOAIHMzzl', 'ltN6gYCPx70zntHtAl4RzczBEqh8So1SaSUC0y8QjztPm')
+    auth = tweepy.OAuthHandler(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
+    auth.set_access_token(settings.ACCESS_TOKEN, settings.ACCESS_TOKEN_SECRET)
 
     api = tweepy.API(auth)
 
