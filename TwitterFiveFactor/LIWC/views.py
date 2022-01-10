@@ -18,7 +18,7 @@ def analysis(request):
 
     userName = prodQuery
     if(userName == "None"):
-        return render(request, 'productParser/noTwitter.html')
+        return render(request, 'Main/noTwitter.html')
     if(userName[0]=='@'):
         userName = userName[1:]
     module_dir = os.path.dirname('media/')
@@ -31,7 +31,11 @@ def analysis(request):
     score_data = getExcel(user_scores)
     print(userName)
     print("Getting Tweets for " + str(userName))
-    twitterContent = getTweets(userName)
+    try:
+        twitterContent = getTweets(userName)
+    except:
+        message = "No Twitter account found for that username, please try another account or check your spelling."
+        return render(request, 'Main/noTwitter.html', {'message':message})
     print("Getting Tweets took ", time.time() - start_time, " to run")
 
 
@@ -57,7 +61,13 @@ def analysis(request):
     print("Categorizing tokens took ", time.time() - start_time, " to run")
 
     print("Getting Best Match")
-    match = bestMatch(data, values)
+    try:
+        match = bestMatch(data, values)
+    except:
+        message = "Analysis cannot be preformed on this account. This is usually due to the account " \
+                  "primarily being in a language other than English, or the Twitter API rate limit being reached." \
+                  "Please try another account, or wait and try again later. "
+        return render(request, 'Main/noTwitter.html', {'message':message})
     print("Best Match took ", time.time() - start_time, " to run")
 
     profile = list(match.keys())[0]
