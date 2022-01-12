@@ -11,10 +11,39 @@ class Node:
         self.children = {}
 
 class Trie:
+    '''
+    A Trie structure to allow for quick and efficient retrieval of matching values
+
+    Attributes
+    ----------
+    root : Node
+        The initial data point at the start of a Trie
+
+    Methods
+    -------
+    insert(self)
+        Inserts a new node into the trie. This node contains a word/regex and its
+        corresponding LIWC value
+
+    lookup(self, word)
+        Check to see if a word/regex exists in the trie and returns its value if it
+        does
+
+    printAllNodes(self, word)
+        Iterates through the Trie structure and prints every word/regex and its value
+
+    '''
     def __init__(self):
         self.root = Node()
 
     def insert(self, word, value):
+        '''
+        Inserts a new node into the trie. This node contains a word/regex and its
+        corresponding LIWC value
+        :param word: str
+        :param value: int
+        :return:
+        '''
         currentWord = word
         currentNode = self.root
         while len(currentWord) > 0:
@@ -31,6 +60,12 @@ class Trie:
                 currentWord = currentWord[1:]
 
     def lookup(self, word):
+        '''
+        Check to see if a word/regex exists in the trie and returns its value if it
+        does
+        :param word: str
+        :return nodeValue: int
+        '''
         currentWord = word
         currentNode = self.root
         while len(currentWord) > 0:
@@ -47,6 +82,10 @@ class Trie:
         return currentNode.value
 
     def printAllNodes(self):
+        '''
+        Iterates through the Trie structure and prints every word/regex and its value
+        :return:
+        '''
         nodes = [self.root]
         while len(nodes) > 0:
             for letter in nodes[0].children:
@@ -54,27 +93,47 @@ class Trie:
             print(nodes.pop(0).key)
 
 def makeTrie(words):
+    '''
+    Creates the trie structure from given words
+    :param words:
+    :return: trie: Trie structure (list)
+    '''
     trie = Trie()
     for word, value in words.items():
         trie.insert(word, value)
     return trie
 
-#reads excel data into DataFrame Object
 def getExcel(filename):
+    '''
+    Turns excel file into a Pandas Dataframe object
+    :param filename:
+    :return: exFile: Pandas Dataframe
+    '''
     # 0 means sheet zero
     exFile = pd.read_excel(filename,0)
     return exFile
 
-#Gets specific users data from excellspreadsheat
 def getUserData(xlx, colName):
+    '''
+    gets LIWC attributes for a specific user
+    :param xlx: Pandas Dataframe
+    :param colName: int
+    :return: list: list containing the users attributes
+    '''
     user = []
     for i in range(0,64):
         user.append(xlx[colName][i])
 
     return user
 
-#Gets specific category data from excel spreadsheat
 def getCategoryData(xlx, catNo):
+    '''
+    gets all information for a specific liwc category
+
+    :param xlx: Pandas Dataframe
+    :param catNo: int
+    :return: list: list
+    '''
     col = xlx.loc[catNo,:]
     category = []
     plus = 0
@@ -85,8 +144,14 @@ def getCategoryData(xlx, catNo):
             category.append(col[g])
     return category
 
-#Prints all of a  Users data
 def printUserData(xlx, colName):
+    '''
+    Prints all of a Users data
+
+    :param xlx: Pandas Dataframe
+    :param colName: int
+    :return:
+    '''
     print(colName)
     print("------")
     total = 0
@@ -97,8 +162,14 @@ def printUserData(xlx, colName):
     avg = total / 64
     print("Average is: " + str(avg))
 
-#Prints Categorys data
 def printCategoryData(xlx, catNo):
+    '''
+    Prints all users data from a liwc category
+
+    :param xlx: Pandas Dataframe
+    :param catNo: int
+    :return:
+    '''
     col = xlx.loc[catNo,:]
     head = xlx.columns.values
     print("---")
@@ -114,15 +185,25 @@ def printCategoryData(xlx, catNo):
 
     print("Average is: " + str(total/238))
 
-#Prints all data from every user
 def printEverything(xlx):
+    '''
+    Prints all data from every  user for every liwc category
+    :param xlx: Pandas Dataframe
+    :return:
+    '''
     #Print everything
     for i in range(0, 64):
         print(i)
         printCategoryData(xlx, i)
 
-#Finds closes match to specified users LIWC Scores
 def bestMatch(xlx, user):
+    '''
+    Finds and returns ordered list of users ranked by how close they are to the given
+    twitter users score
+    :param xlx: Pandas Dataframe
+    :param user: list
+    :return: users: list
+    '''
     mainUserData = user
     users = {}
     # 1) Create dict of all users initialize to 0
@@ -154,8 +235,12 @@ def bestMatch(xlx, user):
     users = dict(sorted(users.items(), key=lambda item: item[1]))
     return users
 
-# Converts a .dic file to a python dictionary
 def dic_to_dict(filename):
+    '''
+    converts a .dic file into a python dictionary structure
+    :param filename: .dic file
+    :return: exportDict; dict
+    '''
     exportDict = dict()
     with open(filename) as file:
         lines = file.readlines()
@@ -180,8 +265,12 @@ def dic_to_dict(filename):
             exportDict[word] = numList
     return exportDict
 
-# A very simple tokeninzer method
 def simpTokenize(text):
+    '''
+    Breaks a string into individual tokens and returns a list of them
+    :param text: String
+    :return: retList: list
+    '''
     retList = []
     word = ""
     for i in text:
@@ -193,8 +282,13 @@ def simpTokenize(text):
     retList.append(word)
     return retList
 
-# matches tokens to their corresponding value in the LIWC dictionry
 def match_regex_to_text(tokens, dictionary):
+    '''
+    Matches tokens to the liwc dictionary values, and returns a list of values
+    :param tokens: list
+    :param dictionary: dictionary
+    :return: values: list
+    '''
     values = []
     for word in tokens:
         wordMatch = []
@@ -221,13 +315,22 @@ def match_regex_to_text(tokens, dictionary):
     print("------------")
     return values
 
-#Removes all special characters
 def removeSpecialCharacters(str):
+    '''
+    Removes special characters from a string
+    :param str: String
+    :return: retStr: String
+    '''
     retStr = re.sub('[^a-zA-Z0-9]+', '', str)
     return retStr
 
-#Uses SNSScrape to get a users recent tweets depending on their twitter username
 def getTweets(username):
+    '''
+    Uses tweepy and twitter API to get a users tweets based on their username.
+    returns their tweet content as a string
+    :param username: String
+    :return: twitterContent: String
+    '''
     tweets_list = []
     auth = tweepy.OAuthHandler(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
     auth.set_access_token(settings.ACCESS_TOKEN, settings.ACCESS_TOKEN_SECRET)
@@ -240,8 +343,13 @@ def getTweets(username):
 
     return twitterContent
 
-#A more complicated tokenizer that seperates words, twitter mentions, links and prices
 def tokenize(tweets):
+    '''
+    A more complicated tokenizer that seperates words, twitter mentions,
+    links and prices
+    :param tweets: String
+    :return: retList: List
+    '''
     splitwords = tweets.split(" ")
     mentions = []
     links = []
@@ -268,9 +376,15 @@ def tokenize(tweets):
     retList.append(prices)
     return retList
 
-#An Algorithm to get a users personality score from the supplied database of
-#Personality scores
+
 def getScore(xlx, userNo):
+    '''
+    An Algorithm to get a users personality score from the supplied database of
+    Personality scores
+    :param xlx: Pandas Dataframe
+    :param userNo: int
+    :return: retList: List
+    '''
     retList = []
     scores = []
     categories = []
@@ -290,7 +404,9 @@ def getScore(xlx, userNo):
     retList.append(categories)
     return retList
 
-#Initiaizer for the LIWC dictionary
+"""
+const: Initiaizer for the LIWC dictionary
+"""
 LIWC = {
     1:0,
     2:0,
