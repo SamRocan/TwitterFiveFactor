@@ -46,12 +46,14 @@ def analysis(request):
 
     print("turning to dictionary")
     dictionary = dic_to_dict(liwc_dic)
-    print("Dictionary took ", time.time() - start_time, " to run")
+
+    print("turning into trie")
     trie = makeTrie(dictionary)
+
+    print("Trie took ", time.time() - start_time, " to run")
+
 
     print("Categorizing tokens")
-    trie = makeTrie(dictionary)
-
     values = []
     for i in tokenizedTweets[0]:
         value = trie.lookup(i)

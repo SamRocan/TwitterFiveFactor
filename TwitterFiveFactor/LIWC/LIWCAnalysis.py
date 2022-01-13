@@ -405,7 +405,7 @@ def getScore(xlx, userNo):
     return retList
 
 """
-const: Initiaizer for the LIWC dictionary
+const: Initializer for the LIWC dictionary
 """
 LIWC = {
     1:0,
