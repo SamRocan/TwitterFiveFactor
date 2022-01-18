@@ -12,12 +12,16 @@
     <canvas id="myChartBar"></canvas>
 </div>
 <div style="text-align: center; margin-bottom: 30px">
-<p>{{ext}}: {{extScore}}</p>
-<p>{{neu}}: {{neuScore}}</p>
-<p>{{agr}}: {{agrScore}}</p>
-<p>{{con}}: {{conScore}}</p>
-<p>{{opn}}: {{opnScore}}</p>
-<a href="{% url 'index' %}" class="btn btn-secondary">Try someone else?</a>
+    <p>{{ext}}: {{extScore}}</p>
+    <p>{{neu}}: {{neuScore}}</p>
+    <p>{{agr}}: {{agrScore}}</p>
+    <p>{{con}}: {{conScore}}</p>
+    <p>{{opn}}: {{opnScore}}</p>
+    <a href="{% url 'index' %}" class="btn" style="border-radius: 10px; background-color: #436981; color: white;">Try someone else?</a>
+    <br>
+    <br>
+    <button onclick="window.print()" class="btn" style="border-radius: 10px; background-color: #00a476; color: white;">Save as PDF</button>
+
 </div>
 {% endblock %}
 {% block extraJS %}
